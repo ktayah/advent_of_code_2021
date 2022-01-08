@@ -1,8 +1,8 @@
 use std::fs;
 
-const OPENINGS: &'static [char] = &['<', '{', '[', '('];
+const OPENINGS: &[char] = &['<', '{', '[', '('];
 
-fn calculate_score(contents: &String) -> (i32, Vec<i128>) {
+fn calculate_score(contents: &str) -> (i32, Vec<i128>) {
     let mut stack: Vec<char> = Vec::new();
     let mut incorrect_score = 0;
     let mut unbalanced_score: Vec<i128> = Vec::new();
@@ -40,11 +40,11 @@ fn calculate_score(contents: &String) -> (i32, Vec<i128>) {
         }
 
         // If are stacked is not emptied, our line is not "balanced"
-        if stack.len() > 0 && !incorrect {
+        if !stack.is_empty() && !incorrect {
             let mut running_score: i128 = 0;
-            let mut stack = stack.iter().rev();
+            let stack = stack.iter().rev();
 
-            while let Some(val) = stack.next() {
+            for val in stack {
                 let s = match val {
                     '(' => 1,
                     '[' => 2,
@@ -71,7 +71,7 @@ fn main() {
 
     let (syntax_score, mut unbalanced_scores) = calculate_score(&contents);
 
-    unbalanced_scores.sort();
+    unbalanced_scores.sort_unstable();
     println!("{} {}", unbalanced_scores.len(), unbalanced_scores.len() / 2);
     let middle_unbalanced_score = unbalanced_scores[unbalanced_scores.len() / 2];
 
